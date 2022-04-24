@@ -1,6 +1,6 @@
 {
   "name": "dtalk",
-  "version": "3.8.8",
+  "version": "3.8.12",
   "description": "钉钉-Linux版",
   "main": "src/main.js",
   "scripts": {
@@ -9,30 +9,32 @@
   },
   "author": {
     "name": "yutent",
-    "email": "yutent@doui.cc"
+    "email": "yutent.io@gmail.com"
   },
   "devDependencies": {
-    "electron": "^6.0.0",
-    "electron-builder": "^21.2.0"
+    "electron": "^18.0.0",
+    "electron-builder": "^23.0.0"
   },
   "build": {
-    "appId": "cc.doui.dtalk",
-    "productName": "DingDing",
+    "appId": "top.yutent.dtalk",
+    "productName": "钉钉(DingTalk)",
+    "electronDownload": {
+      "version": "18.1.0",
+      "mirror": "https://npm.taobao.org/mirrors/electron/"
+    },
     "copyright": "Copyright © 2019 ${author}",
     "directories": {
       "buildResources": "icons",
       "output": "build"
     },
-    "files": ["src/**/*"],
+    "files": [
+      "src/**/*"
+    ],
     "linux": {
       "category": "Network;Chat",
       "target": [
         {
           "target": "deb",
-          "arch": "x64"
-        },
-        {
-          "target": "AppImage",
           "arch": "x64"
         }
       ],

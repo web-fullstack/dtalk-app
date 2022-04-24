@@ -1,16 +1,14 @@
 /**
  * 托盘
- * @author yutent<yutent@doui.cc>
+ * @author yutent<yutent.io@gmail.com>
  * @date 2019/01/21 20:42:07
  */
-
-'use strict'
 
 const { app, Tray, Menu } = require('electron')
 const path = require('path')
 const ROOT = __dirname
 
-module.exports = function(win) {
+module.exports = function (win) {
   app.__TRAY__ = new Tray(path.join(ROOT, '../images/tray.png'))
   let menuList = Menu.buildFromTemplate([
     {

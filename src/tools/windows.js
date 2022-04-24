@@ -1,17 +1,16 @@
 /**
  * 各种窗口创建
- * @author yutent<yutent@doui.cc>
+ * @author yutent<yutent.io@gmail.com>
  * @date 2019/01/26 18:28:22
  */
 
-'use strict'
-
+const { join } = require('path')
 const { BrowserWindow } = require('electron')
 
 /**
  * 应用主窗口
  */
-exports.createMainWindow = function(icon) {
+exports.createMainWindow = function (icon) {
   // 创建浏览器窗口
   let win = new BrowserWindow({
     title: '钉钉-electron版',
@@ -23,14 +22,12 @@ exports.createMainWindow = function(icon) {
     webPreferences: {
       webSecurity: false,
       experimentalFeatures: true,
-      nodeIntegration: true
+      // nodeIntegration: true,
+      preload: join(__dirname, './inject.js')
     },
     show: false
   })
 
-  // 然后加载应用的 index.html。
-
-  // win.loadURL('app://local/index.html')
   win.loadURL('https://im.dingtalk.com')
 
   win.on('ready-to-show', _ => {
@@ -42,13 +39,10 @@ exports.createMainWindow = function(icon) {
   win.webContents.on('dom-ready', ev => {
     win.webContents.executeJavaScript(
       `
-
-      const shell = require('electron').shell;
-
       $(document).on('click', 'a[href^="http"]', function(event) {
           if(!this.hasAttribute('nwdirectory')){
             event.preventDefault();
-            shell.openExternal(this.href);
+            electron.open(this.href)
           }
       });
 
@@ -56,18 +50,28 @@ exports.createMainWindow = function(icon) {
       localStorage.setItem("notification", "true");
       localStorage.setItem("newUserState", "secTip");
       localStorage.setItem("latest_lang_info", "zh_CN");
+      localStorage.setItem("login_method", "autoLogin");
       
-      if(localStorage.getItem('fuck2')){
+      
+      let cache = electron.readToken()
 
-        sessionStorage.setItem('wk_device_id', localStorage.getItem('fuck1'))
-        sessionStorage.setItem('wk_token', localStorage.getItem('fuck2'))
+      
+      if(cache){
+        cache = JSON.parse(cache)
+        sessionStorage.setItem('wk_device_id', cache.id)
+        sessionStorage.setItem('wk_token', cache.token)
         
+        electron.restoreCookie()
+
+        // 第一次进来刷新一下页面, 才会自动登录
+        if(!sessionStorage.getItem('first_in')){
+          sessionStorage.setItem('first_in', 1)
+          setTimeout(function(){
+            location.reload()
+          }, 2000)
+        }
       }
 
-      if(!sessionStorage.getItem('first_in')){
-        sessionStorage.setItem('first_in', 1)
-        location.reload()
-      }
       
       `,
       true
@@ -80,9 +84,12 @@ exports.createMainWindow = function(icon) {
       `
         if(sessionStorage.getItem('wk_token')){
 
-          localStorage.setItem('fuck1', sessionStorage.getItem('wk_device_id'))
-          
-          localStorage.setItem('fuck2', sessionStorage.getItem('wk_token'))
+          electron.saveCookie()
+
+          electron.saveToken(
+            sessionStorage.getItem('wk_device_id'),
+            sessionStorage.getItem('wk_token')
+          )
         }
       
       `,

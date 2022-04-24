@@ -1,13 +1,15 @@
 /* app */
-const { app, session, Menu } = require('electron')
-const path = require('path')
-
-const log = console.log
+const { app, session, Menu, ipcMain } = require('electron')
+const { join } = require('path')
+const fs = require('fs')
 
 const createTray = require('./tools/tray')
 const { createMainWindow } = require('./tools/windows')
 
 const ROOT = __dirname
+const APP_DIR = join(app.getPath('appData'), './dtalk')
+const sessionFile = join(APP_DIR, './login_session.json')
+const cookieFile = join(APP_DIR, './login_cookie.json')
 
 /* ----------------------------------------------------- */
 
@@ -22,10 +24,54 @@ Menu.setApplicationMenu(null)
 app.once('ready', () => {
   // 修改app的UA
   session.defaultSession.setUserAgent(
-    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
   )
 
-  let win = createMainWindow(path.join(ROOT, './images/app.png'))
+  let win = createMainWindow(join(ROOT, './images/app.png'))
 
   createTray(win)
+})
+
+ipcMain.on('app', (ev, conn) => {
+  switch (conn.type) {
+    case 'saveToken':
+      fs.writeFile(sessionFile, conn.data, function (err) {})
+      ev.returnValue = true
+      break
+
+    case 'readToken':
+      {
+        let cache = ''
+        try {
+          cache = fs.readFileSync(sessionFile).toString()
+        } catch (err) {}
+        ev.returnValue = cache
+      }
+      break
+
+    case 'restoreCookie':
+      {
+        try {
+          let cache = fs.readFileSync(cookieFile).toString()
+          cache = JSON.parse(cache)
+          for (let it of cache) {
+            it.url = 'https://im.dingtalk.com'
+
+            session.defaultSession.cookies.set(it)
+          }
+        } catch (err) {}
+        ev.returnValue = true
+      }
+      break
+
+    case 'saveCookie':
+      {
+        let cookie = session.defaultSession.cookies.get({})
+        cookie.then(r => {
+          fs.writeFile(cookieFile, JSON.stringify(r), function (err) {})
+        })
+        ev.returnValue = true
+      }
+      break
+  }
 })
