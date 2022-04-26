@@ -8,8 +8,11 @@ const { app, Tray, Menu } = require('electron')
 const path = require('path')
 const ROOT = __dirname
 
+const TRAY_ICO = path.join(ROOT, '../images/tray.png')
+const TRAY_ICO_A = path.join(ROOT, '../images/tray_a.png')
+
 module.exports = function (win) {
-  app.__TRAY__ = new Tray(path.join(ROOT, '../images/tray.png'))
+  let dTray = new Tray(TRAY_ICO)
   let menuList = Menu.buildFromTemplate([
     {
       label: '显示主窗口',
@@ -25,9 +28,25 @@ module.exports = function (win) {
       }
     }
   ])
-  app.__TRAY__.on('click', _ => {
+  let unreadCache = false
+
+  dTray.on('click', _ => {
     win.show()
   })
 
-  app.__TRAY__.setContextMenu(menuList)
+  dTray.setContextMenu(menuList)
+
+  return function (unread) {
+    // 缓存状态, 避免频繁修改tray图标
+    if (unreadCache === unread) {
+      return
+    }
+    unreadCache = unread
+
+    if (unread) {
+      dTray.setImage(TRAY_ICO_A)
+    } else {
+      dTray.setImage(TRAY_ICO)
+    }
+  }
 }

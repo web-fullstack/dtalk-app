@@ -29,7 +29,7 @@ app.once('ready', () => {
 
   let win = createMainWindow(join(ROOT, './images/app.png'))
 
-  createTray(win)
+  app.toggleTray = createTray(win)
 })
 
 ipcMain.on('app', (ev, conn) => {
@@ -70,6 +70,13 @@ ipcMain.on('app', (ev, conn) => {
         cookie.then(r => {
           fs.writeFile(cookieFile, JSON.stringify(r), function (err) {})
         })
+        ev.returnValue = true
+      }
+      break
+
+    case 'toggleTray':
+      {
+        app.toggleTray(conn.data)
         ev.returnValue = true
       }
       break

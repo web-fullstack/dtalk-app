@@ -33,7 +33,7 @@ exports.createMainWindow = function (icon) {
   win.on('ready-to-show', _ => {
     win.show()
 
-    // win.openDevTools()
+    win.openDevTools()
   })
 
   win.webContents.on('dom-ready', ev => {
@@ -70,6 +70,20 @@ exports.createMainWindow = function (icon) {
             location.reload()
           }, 2000)
         }
+
+        function checkUnReadMsg() {
+
+          window.__timer = setTimeout(function() {
+            var $box = document.body.querySelector('.conv-lists-box')
+            var $unread = $box.querySelectorAll('.unread-num')
+
+            electro($unread.length > 0)
+            clearTimeout(window.__timer)
+            checkUnReadMsg()
+          }, 1500)
+        }
+
+        checkUnReadMsg()
       }
 
       

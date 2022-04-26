@@ -24,5 +24,9 @@ contextBridge.exposeInMainWorld('electron', {
 
   saveCookie() {
     return ipcRenderer.sendSync('app', { type: 'saveCookie' })
+  },
+
+  toggleTray(unread) {
+    return ipcRenderer.sendSync('app', { type: 'toggleTray', data: unread })
   }
 })
