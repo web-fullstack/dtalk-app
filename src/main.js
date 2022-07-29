@@ -1,24 +1,26 @@
-/* app */
+// electron
 const { app, session, Menu, ipcMain } = require('electron')
+
+// node.js
 const { join } = require('path')
 const fs = require('fs')
 
-const createTray = require('./tools/tray')
+// tools
 const { createMainWindow } = require('./tools/windows')
+const createTray = require('./tools/tray')
 
-const ROOT = __dirname
+const ROOT = __dirname;
+
 const APP_DIR = join(app.getPath('appData'), './dtalk')
 const sessionFile = join(APP_DIR, './login_session.json')
 const cookieFile = join(APP_DIR, './login_cookie.json')
 
-/* ----------------------------------------------------- */
-
+//
 app.commandLine.appendSwitch('lang', 'zh-CN')
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 
-Menu.setApplicationMenu(null)
-
-/* ----------------------------------------------------- */
+//
+Menu.setApplicationMenu(null);
 
 //  初始化应用
 app.once('ready', () => {
@@ -41,9 +43,9 @@ ipcMain.on('app', (ev, conn) => {
     case 'saveToken':
       fs.writeFile(sessionFile, conn.data, function (err) {})
       ev.returnValue = true
-      break
-
+      break;
     case 'readToken':
+      // {} 块级作用域
       {
         let cache = ''
         try {
@@ -51,8 +53,7 @@ ipcMain.on('app', (ev, conn) => {
         } catch (err) {}
         ev.returnValue = cache
       }
-      break
-
+      break;
     case 'restoreCookie':
       {
         try {
@@ -66,8 +67,7 @@ ipcMain.on('app', (ev, conn) => {
         } catch (err) {}
         ev.returnValue = true
       }
-      break
-
+      break;
     case 'saveCookie':
       {
         let cookie = session.defaultSession.cookies.get({})
@@ -76,13 +76,12 @@ ipcMain.on('app', (ev, conn) => {
         })
         ev.returnValue = true
       }
-      break
-
+      break;
     case 'toggleTray':
       {
         app.toggleTray(conn.data)
         ev.returnValue = true
       }
-      break
+      break;
   }
 })

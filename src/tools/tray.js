@@ -21,29 +21,27 @@ module.exports = function (win) {
         win.show()
       }
     },
-    { type: 'separator' },
+    {
+      type: 'separator'
+    },
     {
       label: '退出',
       click() {
         win.destroy()
       }
     }
-  ])
-  let unreadCache = false
-
+  ]);
+  let unreadCache = false;
   dTray.on('click', _ => {
     win.show()
-  })
-
-  dTray.setContextMenu(menuList)
-
+  });
+  dTray.setContextMenu(menuList);
   return function (unread) {
     // 缓存状态, 避免频繁修改tray图标
     if (unreadCache === unread) {
-      return
+      return;
     }
-    unreadCache = unread
-
+    unreadCache = unread;
     if (unread) {
       dTray.setImage(TRAY_ICO_A)
     } else {
