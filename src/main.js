@@ -26,9 +26,13 @@ app.once('ready', () => {
   session.defaultSession.setUserAgent(
     'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36'
   )
-
-  let win = createMainWindow(join(ROOT, './images/app.png'))
-
+  // console.log('ROOT =', ROOT);
+  // ROOT = /Users/xgqfrms-mbp/Documents/GitHub/dtalk-app/src
+  let win = createMainWindow(join(ROOT, './icons/app.png'))
+  // console.log('process', process);
+  if (process.platform === 'darwin') {
+    app.dock.setIcon(join(ROOT, './icons/app.png'));
+  }
   app.toggleTray = createTray(win)
 })
 

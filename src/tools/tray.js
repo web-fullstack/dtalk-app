@@ -6,8 +6,11 @@ const { app, Tray, Menu } = require('electron')
 const path = require('path')
 const ROOT = __dirname
 
-const TRAY_ICO = path.join(ROOT, '../images/tray.png')
-const TRAY_ICO_A = path.join(ROOT, '../images/tray_a.png')
+// 托盘 icon
+const TRAY_ICO = path.join(ROOT, '../icons/trayx16.png')
+// const TRAY_ICO = path.join(ROOT, '../icons/trayx32.png')
+// const TRAY_ICO = path.join(ROOT, '../icons/tray.png')
+const TRAY_ICO_A = path.join(ROOT, '../icons/tray_a.png')
 
 module.exports = function (win) {
   let dTray = new Tray(TRAY_ICO)

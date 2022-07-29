@@ -9,6 +9,7 @@ const { BrowserWindow } = require('electron')
  * 应用主窗口
  */
 exports.createMainWindow = function (icon) {
+  // console.log(`✅ icon =`, icon)
   // 创建浏览器窗口
   let win = new BrowserWindow({
     title: '钉钉 网页版 App',
@@ -24,7 +25,7 @@ exports.createMainWindow = function (icon) {
       preload: join(__dirname, './inject.js')
     },
     show: false
-  })
+  });
 
   win.loadURL('https://im.dingtalk.com')
 
