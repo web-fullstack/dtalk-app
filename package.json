@@ -4,8 +4,8 @@
   "description": "钉钉 网页版 App",
   "main": "src/main.js",
   "scripts": {
-    "start": "electron .",
-    "pack": "electron-builder"
+    "dev": "electron .",
+    "build": "electron-builder"
   },
   "author": "xgqfrms",
   "build": {
