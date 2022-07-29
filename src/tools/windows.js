@@ -1,7 +1,5 @@
 /**
- * 各种窗口创建
- * @author yutent<yutent.io@gmail.com>
- * @date 2019/01/26 18:28:22
+ * 窗口创建
  */
 
 const { join } = require('path')
@@ -13,7 +11,7 @@ const { BrowserWindow } = require('electron')
 exports.createMainWindow = function (icon) {
   // 创建浏览器窗口
   let win = new BrowserWindow({
-    title: '钉钉-electron版',
+    title: '钉钉 网页版 App',
     width: 1000,
     height: 602,
     resizable: false,
@@ -51,16 +49,16 @@ exports.createMainWindow = function (icon) {
       localStorage.setItem("newUserState", "secTip");
       localStorage.setItem("latest_lang_info", "zh_CN");
       localStorage.setItem("login_method", "autoLogin");
-      
-      
+
+
       let cache = electron.readToken()
 
-      
+
       if(cache){
         cache = JSON.parse(cache)
         sessionStorage.setItem('wk_device_id', cache.id)
         sessionStorage.setItem('wk_token', cache.token)
-        
+
         electron.restoreCookie()
 
         // 第一次进来刷新一下页面, 才会自动登录
@@ -86,7 +84,7 @@ exports.createMainWindow = function (icon) {
         checkUnReadMsg()
       }
 
-      
+
       `,
       true
     )
@@ -105,7 +103,7 @@ exports.createMainWindow = function (icon) {
             sessionStorage.getItem('wk_token')
           )
         }
-      
+
       `,
       true
     )

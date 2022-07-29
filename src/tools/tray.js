@@ -1,7 +1,5 @@
 /**
  * 托盘
- * @author yutent<yutent.io@gmail.com>
- * @date 2019/01/21 20:42:07
  */
 
 const { app, Tray, Menu } = require('electron')

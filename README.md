@@ -2,7 +2,7 @@
 
 https://github.com/web-fullstack/dtalk-app/
 
-![preview](./preview.png)
+![preview](./icons/preview.png)
 
 
 ```sh
